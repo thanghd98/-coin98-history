@@ -16,6 +16,7 @@ export interface IHistoryParams<T = any> {
 }
 
 export interface IHistoryObject<T = any>{
+    [x: string]: any
     type: string,
     hash:string,
     from: string,

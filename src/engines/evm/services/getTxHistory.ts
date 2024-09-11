@@ -14,35 +14,31 @@ const getHistoryOnTomoChain = async (params: IHistoryParams<any>) => {
   const tokenAddress = get(token, 'address')
 
   if (tokenAddress) {
-    const fetchApiEndpoint = `${C98_ADAPTER_ENDPOINT}/wallet/approval?${serialize({tokenAddress, account: address, page, limit})}`
+    const fetchApiEndpoint = `https://www.vicscan.xyz/api/tokentx/list?tokenAddress=${tokenAddress}&account=${address}&offset=${page-1}&limit=${limit}`
 
-    const responseData = await (await fetch(fetchApiEndpoint,{
-      headers: {
-        Version: '14.6.3'
-      }
-    })).json()
+    const {data} = await (await fetch(fetchApiEndpoint)).json()
 
-    if (!responseData?.data) {
+    if (!data) {
       return []
     }
-    const transformDataResponse = responseData.data.map((item: any) =>
+
+    const transformDataResponse = data.map((item: any) =>
       _pick(item, [
         'blockNumber',
         'timestamp',
-        'hash',
+        'transactionHash',
         'blockHash',
         'from',
         'to',
         'contractAddress',
-        'value',
+        'valueNumber',
         'tokenName',
         'tokenSymbol',
         'tokenDecimal',
-        'nonce',
         'transactionIndex'
       ])
     )
-    return [...transformDataResponse].map((tx: any) => ({...tx, action: 'txlist'}))
+    return [...transformDataResponse].map((tx: any) => ({...tx, value: tx.valueNumber, hash: tx.transactionHash, action: 'txlist'}))
   }
 
   const fetchApiEndpoint = `https://tomoscan.io/api/transaction/list?${serialize({account: address, offset: page * limit, limit})}`
@@ -53,9 +49,6 @@ const getHistoryOnTomoChain = async (params: IHistoryParams<any>) => {
     return []
   }
 
-  // if(tokenAddress){
-  //   responseData = responseData?.data?.filter((tx: any) => tx?.to === tokenAddress)
-  // }
   // else{
   //   responseData = responseData?.data?.filter((tx: any) => tx?.input === '0x')
   // }

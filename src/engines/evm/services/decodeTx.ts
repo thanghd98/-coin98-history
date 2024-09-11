@@ -186,7 +186,6 @@ export const generateInputCode = (decodeMessage: DecodeMessageType): GenerateInp
   
     if (nftTransfer || _get(stateOutPut, 'action') === 'nfttx') {
       if (_get(stateOutPut, 'action') === 'nfttx') nftTransfer = stateOutPut
-      console.log("🚀 ~ generateInputCode ~ nftTransfer:", nftTransfer)
       stateOutPut.type = 'transfer'
       stateOutPut.contractAddress = nftTransfer.contractAddress
       stateOutPut.to = nftTransfer.contractAddress
@@ -215,12 +214,7 @@ export const generateInputCode = (decodeMessage: DecodeMessageType): GenerateInp
     }
 
     if (!functionName) {
-      return {
-        ...stateOutPut,
-        type: 'callContract',
-        value: 0,
-        amount: 0
-      }
+      return stateOutPut
     }
   
     if (functionName.includes('approve') || props.type === 'approval' || props.type === 'approve') {

@@ -1,10 +1,9 @@
-import { CosmosHistory, SolanaHistory, TonHistory, EvmHistory } from "../engines";
+import { CosmosHistory, SolanaHistory, EvmHistory } from "../engines";
 import { History } from '../HistoryAbstract'
 
 export const Engines:  History[] = [
     SolanaHistory, 
     CosmosHistory, 
-    TonHistory,
     CosmosHistory,
     EvmHistory, 
 ] as any
